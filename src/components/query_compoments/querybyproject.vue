@@ -1,93 +1,39 @@
 <template>
   <div class="class">
-    <v-treeview
-      selectable
-      item-disabled="locked"
-      selected-color="blue"
+    <v-select
       :items="items"
       v-model="project_selection"
-    ></v-treeview>
-    <p>{{ project_selection }}</p>
+      label="项目名称"
+    ></v-select>
+    <v-btn color="info" style="" @click="onquery">查询</v-btn>
   </div>
 </template>
 
 <script>
+import AppVue from "../../App.vue";
 export default {
   data: () => ({
-    project_selection: 1,
-    items: [
-      {
-        id: "1",
-        name: "Applications :",
-        children: [
-          { id: 2, name: "Calendar : app" },
-          { id: 3, name: "Chrome : app" },
-          { id: 4, name: "Webstorm : app" },
-        ],
-      },
-      {
-        id: 5,
-        name: "Documents :",
-        children: [
-          {
-            id: 6,
-            name: "vuetify :",
-            children: [
-              {
-                id: 7,
-                name: "src :",
-                children: [
-                  { id: 8, name: "index : ts" },
-                  { id: 9, name: "bootstrap : ts" },
-                ],
-              },
-            ],
-          },
-          {
-            id: 10,
-            name: "material2 :",
-            children: [
-              {
-                id: 11,
-                name: "src :",
-                children: [
-                  { id: 12, name: "v-btn : ts" },
-                  { id: 13, name: "v-card : ts" },
-                  { id: 14, name: "v-window : ts" },
-                ],
-              },
-            ],
-          },
-        ],
-      },
-      {
-        id: 15,
-        name: "Downloads :",
-        children: [
-          { id: 16, name: "October : pdf" },
-          { id: 17, name: "November : pdf" },
-          { id: 18, name: "Tutorial : html" },
-        ],
-      },
-      {
-        id: 19,
-        name: "Videos :",
-        children: [
-          {
-            id: 20,
-            name: "Tutorials :",
-            children: [
-              { id: 21, name: "Basic layouts : mp4" },
-              { id: 22, name: "Advanced techniques : mp4" },
-              { id: 23, name: "All about app : dir" },
-            ],
-          },
-          { id: 24, name: "Intro : mov" },
-          { id: 25, name: "Conference introduction : avi" },
-        ],
-      },
-    ],
+    project_selection: "",
+    items: [],
   }),
+
+  methods: {
+    onquery() {
+      let api = "http://114.55.93.225:5706/getgrades/bypro/?projects="+this.project_selection;
+      this.axios.get(api).then((response) => {
+        this.$emit("onquery",response.data.data)
+      });
+    },
+  },
+
+  mounted: function () {
+    console.log("mounted");
+    let api = "http://114.55.93.225:5706/projects";
+    this.axios.get(api).then((response) => {
+      console.log(response.data);
+      this.items = response.data.data;
+    });
+  },
 };
 </script>
 

@@ -9,7 +9,6 @@
       </v-card-text>
       <v-card-actions>
         <v-btn color="primary" class="ma-2" to="Query">成绩查询</v-btn>
-        <v-btn color="primary" class="ma-2" to="Book">选手订阅</v-btn>
       </v-card-actions>
     </v-card></v-container
   >

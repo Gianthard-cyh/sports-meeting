@@ -17,6 +17,7 @@
           item-text="text"
           item-value="value"
           label="班级"
+          v-model="class_selection"
           flat
         ></v-select
       ></v-col>
@@ -37,18 +38,19 @@
         </v-btn-toggle>
       </v-col>
     </v-row>
-    <v-btn color="info" style="">查询</v-btn>
+    <v-btn color="info" style="" @click="onquery">查询</v-btn>
   </div>
 </template>
 
 <script>
 export default {
   data: () => ({
-    grade_selection: 1,
+    grade_selection: 23,
+    class_selection:0,
     grade_items: [
-      { text: "高一", value: 1 },
-      { text: "高二", value: 2 },
-      { text: "高三", value: 3 },
+      { text: "高一", value: 23 },
+      { text: "高二", value: 22 },
+      { text: "高三", value: 21 },
     ],
     wl_show: false,
     toggle_wl: 0,
@@ -56,11 +58,34 @@ export default {
 
   watch: {
     grade_selection: function () {
-      if (this.grade_selection >= 2) {
+      if (this.grade_selection < 23) {
         this.wl_show = true;
       } else {
         this.wl_show = false;
       }
+    },
+  },
+
+  methods: {
+    onquery() {
+      var wl = "";
+      if (this.toggle_wl == 0) {
+        wl = "W";
+      } else if (this.toggle_wl == 1) {
+        wl = "L";
+      }
+      if (this.grade_selection == 23) {
+        wl = "";
+      }
+      let api =
+        "http://114.55.93.225:5706/getgrades/byclass/?grades=" +
+        this.grade_selection +
+        "&class=" +
+        wl +
+        this.class_selection 
+      this.axios.get(api).then((response) => {
+        this.$emit("onquery", response.data.data);
+      });
     },
   },
 
